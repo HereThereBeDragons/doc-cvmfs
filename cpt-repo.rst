@@ -588,6 +588,17 @@ removing a directory tree:
 The ``ingest`` command internally opens and closes a transaction. Therefore,
 it can only run if no other transactions are currently open.
 
+When ingesting a tarball the default is to change the file ownership to the cvmfs repository owner
+defined by ``CVMFS_USER`` in ``/etc/cvmfs/repositories.d/<repo>/server.conf``.
+In case this is not wanted, the ``ingest`` command offers with
+
+* ``-k`` or ``--keep-ownership`` to keep the current file ownerships set in the tarball
+* ``-u <uid>`` or ``--user <uid>`` to set a different user as the new owner (default ``gid`` of this user will be used)
+* ``-g <gid>`` or ``--group <gid>`` to set a different ``gid`` for the user. This only works if ``-u`` is used
+ 
+
+.. note:: 
+    Directory ownership is always the ``CVMFS_USER`` of the given repository.
 
 .. _sct_grafting:
 
