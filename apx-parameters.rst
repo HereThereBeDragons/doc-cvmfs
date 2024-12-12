@@ -29,6 +29,8 @@ CVMFS_BACKOFF_MAX               Maximum backoff in seconds when retrying to down
 CVMFS_CATALOG_WATERMARK         | Try to release pinned catalogs when their number surpasses the given watermark.
                                 | Defaults to 1/4 CVMFS_NFILES; explicitly set by shrinkwrap.
 CVMFS_CACHE_BASE                Location (directory) of the CernVM-FS cache.
+CVMFS_CACHE_DIR                 | Similar to ``CVMFS_CACHE_BASE``, but automatically set by cvmfs.
+                                | Only might need manual overwriting when using ``libcvmfs``
 CVMFS_CACHE_REFCOUNT            If set to *yes*, deduplicate open file descriptors by refcounting.
 CVMFS_CACHE_SYMLINKS            If set to *yes*, enables symlink caching in the kernel. 
 CVMFS_CHECK_PERMISSIONS         If set to *no*, disable checking of file ownership and permissions (open all files).
@@ -55,6 +57,10 @@ CVMFS_EXTERNAL_TIMEOUT_DIRECT   Timeout in seconds for HTTP requests to an exter
 CVMFS_EXTERNAL_URL              Semicolon-separated chain of webservers serving external data chunks.
 CVMFS_FALLBACK_PROXY            | List of HTTP proxies similar to ``CVMFS_HTTP_PROXY``. The fallback proxies are
                                 | added to the end of the normal proxies, and disable DIRECT connections.
+CVMFS_FUSE_NOTIFY_INVALIDATION  | Disable fuse notify invalidation. By default disabled on macOS to fix stability issues.
+                                | On Linux systems, it is NOT recommended to turn it off.
+CVMFS_FUSE3_MAX_THREADS         Set max number of fuse threads (requires: libfuse3 > 3.12)
+CVMFS_FUSE3_IDLE_THREADS        Set max number of idle fuse threads (requires: libfuse3 > 3.12)
 CVMFS_FOLLOW_REDIRECTS          When set to *yes*, follow up to 4 HTTP redirects in requests.
 CVMFS_HIDE_MAGIC_XATTRS         If set to *yes* the client will not expose CernVM-FS specific extended attributes
 CVMFS_HOST_RESET_AFTER          See ``CVMFS_PROXY_RESET_AFTER``.
@@ -77,6 +83,9 @@ CVMFS_KCACHE_TIMEOUT            Timeout in seconds for path names and file attri
 CVMFS_KEYS_DIR                  | Directory containing \*.pub files used as repository signing keys.
                                 | If set, this parameter has precedence over ``CVMFS_PUBLIC_KEY``.
 CVMFS_LOW_SPEED_LIMIT           Minimum transfer rate in bytes/second a server or proxy must provide.
+CVMFS_MAGIC_XATTRS_VISIBILITY   | Allows to hide extended attributes to be listed. Options: ``always``, ``never``, ``rootonly``.
+                                | ``rootonly`` means that the listing can only be requested for ``/cvmfs/<repo>``. For any other file,
+                                | only a direct request to a specific extended attribute will work.
 CVMFS_MAX_EXTERNAL_SERVERS      | Limit the number of (geo sorted) stratum 1 servers for external data
                                 | that are effectively used.
 CVMFS_MAX_IPADDR_PER_PROXY      | Limit the number of IP addresses a proxy names resolves into.
@@ -85,6 +94,7 @@ CVMFS_MAX_RETRIES               Maximum number of retries for a given proxy/host
 CVMFS_MAX_SERVERS               Limit the number of (geo sorted) stratum 1 servers that are effectively used.
 CVMFS_MAX_TTL                   Maximum file catalog TTL in minutes.  Can overwrite the TTL stored in the catalog.
 CVMFS_MEMCACHE_SIZE             Size of the CernVM-FS metadata memory cache in Megabyte.
+CVMFS_MOUNT_DIR                 Directory where CernVM-FS is mounted to. Default is ``/cvmfs`` and cannot be overwritten.
 CVMFS_MOUNT_RW                  | Mount CernVM-FS as a read/write file system.  Write operations will fail
                                 | but this option can workaround faulty ``open()`` flags.
 CVMFS_NFILES                    Maximum number of open file descriptors that can be used by the CernVM-FS process.
@@ -180,6 +190,7 @@ CVMFS_CREATOR_VERSION               | The CernVM-FS version that was used to cre
                                     | (do not change manually).
 CVMFS_DONT_CHECK_OVERLAYFS_VERSION  | Disable checking of OverlayFS version before usage.
                                     | (see :ref:`sct_reporequirements`)
+CVMFS_ENABLE_MTIME_NS               Use nanosecond-granularity for modification time of files (instead of milliseconds) 
 CVMFS_ENFORCE_LIMITS                | Set to *true* to cause exceeding \*LIMIT variables to be fatal to a publish
                                     | instead of a warning
 CVMFS_EXTENDED_GC_STATS             | Set to *true* to keep track of the volume of garbage collected files (increases GC running time)
@@ -217,7 +228,9 @@ CVMFS_REPOSITORY_TYPE               Defines if the repository is a master copy (
 CVMFS_REPOSITORY_TTL                | The frequency in seconds of client lookups for changes in the repository.
                                     | Defaults to 4 minutes.
 CVMFS_ROOT_KCATALOG_LIMIT           | Maximum thousands of files allowed in root catalogs, default 200
-                                    | (see also *CVMFS_NESTED_KCATALOG_LIMIT* and *CVMFS_ENFORCE_LIMITS*
+                                    | (see also *CVMFS_NESTED_KCATALOG_LIMIT* and *CVMFS_ENFORCE_LIMITS*)
+CVMFS_SERVER_USE_CATALOG_CACHE      | Caches catalogs locally during publishing. Manual clean-up of the cache needed.
+                                    | Location of the cache ``/var/spool/cvmfs/<repo_name>/cache.server``
 CVMFS_SNAPSHOT_GROUP                | Group name for subset of repositories used with ``cvmfs_server snapshot -a -g``.
                                     | Added with ``cvmfs_server add-replica -g``.
 CVMFS_SPOOL_DIR                     | Location of the upstream spooler scratch directories;
@@ -228,6 +241,7 @@ CVMFS_STRATUM0                      URL of the master copy (*stratum0*) of this 
 CVMFS_STRATUM1                      URL of the Stratum1 HTTP server for this specific repository.
 CVMFS_SYNCFS_LEVEL                  | Controls how often ``sync`` will by called by ``cvmfs_server`` operations.
                                     | Possible levels are 'none', 'default', 'cautious'.
+CVMFS_S3_<param>                    S3-related parameters. See :ref:`S3 Parameter table <tab_s3confparameters>`
 CVMFS_UID_MAP                       Path of a file for the mapping of file owner user ids.
 CVMFS_UNION_DIR                     | Mount point of the union file system for copy-on-write semantics of CernVM-FS.
                                     | Here, changes to the repository are performed
