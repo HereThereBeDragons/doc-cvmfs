@@ -21,20 +21,33 @@ Parameters recognized in configuration files under /etc/cvmfs:
 CVMFS_ALIEN_CACHE               If set, use an alien cache at the given location
 CVMFS_ALT_ROOT_PATH             | If set to *yes*, use alternative root catalog path.
                                 | Only required for fixed catalogs (tag / hash) under the alternative path.
+CVMFS_ARCH                      | Automatically set by CVMFs to reflect the CPU architecture on which the client runs (using ``uname -m``).
+                                | Allows to utilize variant symlinks with cvmfs installations to auto-select the architecture.
 CVMFS_AUTO_UPDATE               If set to *no*, disables the automatic update of file catalogs.
 CVMFS_AUTHZ_HELPER              Full path to an authz helper, overwrites the helper hint in the catalog.
 CVMFS_AUTHZ_SEARCH_PATH         Full path to the directory that contains the authz helpers.
 CVMFS_BACKOFF_INIT              Seconds for the maximum initial backoff when retrying to download data.
 CVMFS_BACKOFF_MAX               Maximum backoff in seconds when retrying to download data.
+CVMFS_BLACKLIST                 | File name of the blacklist that denies mounting any revision < revision N.
+                                | Format: ``<REPO N`` where REPO is the repository name, N is the revision number,
+                                | and the two parts are separated by whitespace.
+                                | Note: no extra characters are allowed after N, not even whitespace.
 CVMFS_CATALOG_WATERMARK         | Try to release pinned catalogs when their number surpasses the given watermark.
                                 | Defaults to 1/4 CVMFS_NFILES; explicitly set by shrinkwrap.
+CVMFS_CACHE_ALIEN               Deprecated, legacy parameter. Use ``CVMFS_ALIEN_CACHE`` instead.
 CVMFS_CACHE_BASE                Location (directory) of the CernVM-FS cache.
 CVMFS_CACHE_DIR                 | Similar to ``CVMFS_CACHE_BASE``, but automatically set by cvmfs.
                                 | Only might need manual overwriting when using ``libcvmfs``
+CVMFS_CACHE_PRIMARY             Type of cache to use. By default it is ``posix``. (see also :ref:`sct_cache_advanced`)
 CVMFS_CACHE_REFCOUNT            If set to *yes*, deduplicate open file descriptors by refcounting.
+CVNFS_CACHE_<name>_<param>      | Parameters used by advanced cache configuration for cache of type ``name``. 
+                                | See :ref:`sct_cache_advanced`. `<param>`` values can include e.g. 
+                                | ``LOCATOR``, ``TYPE``, ``CMDLINE``, ``ALIEN``, ``WORKSPACE``.
 CVMFS_CACHE_SYMLINKS            If set to *yes*, enables symlink caching in the kernel. 
 CVMFS_CHECK_PERMISSIONS         If set to *no*, disable checking of file ownership and permissions (open all files).
 CVMFS_CLAIM_OWNERSHIP           If set to *yes*, allows CernVM-FS to claim ownership of files and directories.
+CVMFS_CONFIG_REPOSITORY         | CVMFS repository where a CVMFS client will get its config from.
+                                | The default configuration rpm ``cvmfs-config-default`` sets this parameter to ``cvmfs-config.cern.ch``
 CVMFS_CPU_AFFINITY              Comma-separated list to set CPU affinity for all ``cvmfs`` components. 
 CVMFS_DEBUGLOG                  If set, run CernVM-FS in debug mode and write a verbose log the the specified file.
 CVMFS_DEFAULT_DOMAIN            | The default domain will be automatically appended to repository names
@@ -44,6 +57,7 @@ CVMFS_DNS_MIN_TTL               | Minimum effective TTL in seconds for DNS queri
 CVMFS_DNS_MAX_TTL               | Maximum effective TTL in seconds for DNS queries of proxy server names
                                 | (not Stratum 1s). Defaults to 1 day.
 CVMFS_DNS_RETRIES               Number of retries when resolving proxy names
+CVMFS_DNS_SERVER                IP of the DNS server CVMFS should use.
 CVMFS_DNS_TIMEOUT               Timeout in seconds when resolving proxy names
 CVMFS_DNS_ROAMING               If true, watch /etc/resolv.conf for nameserver changes
 CVMFS_ENFORCE_ACLS              | Enforce POSIX ACLs stored in the repository. Requires libfuse 3.
@@ -79,9 +93,12 @@ CVMFS_INFLUX_HOST               Host name or IP address of the receiver of the I
 CVMFS_INFLUX_METRIC_NAME        Name of the measurement of the InfluxDB Telemetry Aggregator
 CVMFS_INFLUX_PORT               Port of the host (receiver) of the InfluxDB Telemetry Aggregator
 CVMFS_IPFAMILY_PREFER           Which IP protocol to prefer when connecting to proxies.  Can be either 4 or 6.
+CVMFS_IPV4_ONLY                 If set to a non-empty value, CVMFS does not try to resolve IPv6 records.
 CVMFS_KCACHE_TIMEOUT            Timeout in seconds for path names and file attributes in the kernel file system buffers.
 CVMFS_KEYS_DIR                  | Directory containing \*.pub files used as repository signing keys.
                                 | If set, this parameter has precedence over ``CVMFS_PUBLIC_KEY``.
+CVMFS_LIBRARY_PATH              | For standalone deployment. Allows ``cvmfs2`` to discover libraries 
+                                | ``libcvmfs_<...>.so`` that are not installed in one of standard search paths.
 CVMFS_LOW_SPEED_LIMIT           Minimum transfer rate in bytes/second a server or proxy must provide.
 CVMFS_MAGIC_XATTRS_VISIBILITY   | Allows to hide extended attributes to be listed. Options: ``always``, ``never``, ``rootonly``.
                                 | ``rootonly`` means that the listing can only be requested for ``/cvmfs/<repo>``. For any other file,
@@ -134,12 +151,17 @@ CVMFS_SYSLOG_FACILITY           | If set to a number between 0 and 7, uses the c
                                 | LOCAL$n$ facility for syslog messages.
 CVMFS_SYSLOG_LEVEL              | If set to 1 or 2, sets the syslog level for CernVM-FS messages to
                                 | LOG_DEBUG or LOG_INFO respectively.
+CVMFS_SYSLOG_PREFIX             Prefix for each CVMFS message in the syslog. By default it is the repo name.
 CVMFS_SYSTEMD_NOKILL            | If set to *yes*, modify the command line to ``@vmfs2 ...`` in order to
                                 | act as a systemd lowlevel storage manager.
+CVMFS_TALK_SOCKET               Internal usage. Used for ``cvmfs_talk``. Default socket is ``/var/spool/cvmfs/<repo>/cvmfs_io``.
+CVMFS_TALK_OWNER                Internal usage. Used for ``cvmfs_talk``. By default it is the repo owner.
 CVMFS_TELEMETRY_RATE            Rate in seconds for Telemetry Aggregator to send the telemetry. Minimum send rate >= 5 sec.
 CVMFS_TELEMETRY_SEND            ``ON`` to activate Telemetry Aggregator.
 CVMFS_TIMEOUT                   Timeout in seconds for HTTP requests with a proxy server.
 CVMFS_TIMEOUT_DIRECT            Timeout in seconds for HTTP requests without a proxy server.
+CVMFS_TRACEBUFFER               Internal usage. Max number of entries of the tracebuffer.
+CVMFS_TRACEBUFFER_THRESHOLD     Internal usage. Flush treshold after how many entries the tracebuffer is flushed to file.
 CVMFS_TRACEFILE                 If set, enables the tracer and trace file system calls to the given file.
 CVMFS_USE_GEOAPI                Request order of Stratum 1 servers and fallback proxies via Geo-API.
 CVMFS_USE_SSL_SYSTEM_CA         | When connecting to an HTTPS endpoints,
