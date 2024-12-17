@@ -1,13 +1,35 @@
 
+Release Notes for CernVM-FS 2.12.3
+==================================
+
+CernVM-FS 2.12.3 is a patch release. It fixes an issue with  empty certificates in the cache seen in 2.12.0.
+
+Bug fixes
+---------
+
+  * [client] Don't commit empty certificates to cache (#3728)
+
+
 Release Notes for CernVM-FS 2.12.2
 ==================================
 
 CernVM-FS 2.12.2 is a small patch release that adds the "quick" ``cvmfs_config fsck -q`` option to check for and quarantine zeroed files in the cache.
 
+Improvements and changes
+------------------------
+
+  * [rpm] bugfix for reload service after rpm upgrades (#3725)
+
+
 Release Notes for CernVM-FS 2.12.1
 ==================================
 
 CernVM-FS 2.12.1 is a small patch release that fixes a packaging issue: it ensures that the service to reload cvmfs after package upgrades is correctly configured.
+
+Bug fixes
+---------
+
+  * [client] Add "cache limit set <MB>" function to cvmfs_talk (`#3623 <https://github.com/cvmfs/cvmfs/issues/3623>`_) 
 
 Release Notes for CernVM-FS 2.12.0
 ==================================
